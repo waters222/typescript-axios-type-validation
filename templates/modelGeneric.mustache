@@ -16,7 +16,30 @@ export interface {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
      */
     {{name}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
 {{/vars}}
-}{{#hasEnums}}
+}
+
+const validate{{classname}}Response = function(input: any) {
+    let data = input;
+    if (typeof data === 'string') {
+        try {
+            data = JSON.parse(data);
+        } catch (e) {
+            throw new Error('invalid json response');
+        }
+    }
+    const error = new Error('response data validation error');
+{{#vars}}
+    {{#required}}if(data.{{name}} === undefined){throw error;}{{/required}}
+    {{^isNullable}}if(data.{{name}} === null){throw error;}{{/isNullable}}
+    if({{^required}}data.{{name}} !== undefined && {{/required}}
+        {{#isNullable}}data.{{name}} !== null && {{/isNullable}}
+        typeof data.{{name}} !== '{{dataType}}'){throw error;}
+{{/vars}}
+    return data;
+};
+
+
+{{#hasEnums}}
 
 /**
  * @export

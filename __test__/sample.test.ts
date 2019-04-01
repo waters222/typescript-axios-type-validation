@@ -1,19 +1,43 @@
-const createTestServer = require('create-test-server');
 import axios from 'axios';
-import { Request, Response } from 'express';
+import MockAdapter from 'axios-mock-adapter';
 
-let server: any;
-beforeAll(async () => {
-    server = await createTestServer();
-});
-afterAll(async () => {
-    console.log('server close');
-    await server.close();
-});
+const mock = new MockAdapter(axios);
+
+import { DefaultApi } from '../out/typescript-axios';
+const api = new DefaultApi(undefined, '');
+
 it('nothing', async () => {
-    server.get('/foo', (req: Request, res: Response) => {
-        res.send('bar');
-    });
-    const response = await axios.get(`${server.url}/foo`);
+    mock.onGet('/foo').reply(200, 'bar');
+    const response = await axios.get(`/foo`);
     expect(response.data).toEqual('bar');
+});
+//
+it('get User', async () => {
+    mock.onGet('/user').reply(200, { id: 1234, name: 'test_user_name' });
+    await expect(api.userGet()).resolves.toBeDefined();
+});
+
+it('get User fail', async () => {
+    mock.onGet('/user').reply(200, { id: '12342', name: 'test_user_name' });
+    await expect(api.userGet()).rejects.toBeDefined();
+});
+
+it('get user extend succ', async () => {
+    mock.onGet('/userExtend').reply(200, { id: 1234, name: 'test_user_name' });
+    await expect(api.userExtendGet()).resolves.toBeDefined();
+    mock.onGet('/userExtend').reply(200, {
+        id: 1234,
+        name: 'test_user_name',
+        email: 'test@sfdf.com',
+    });
+    await expect(api.userExtendGet()).resolves.toBeDefined();
+});
+
+it('get user extend fail', async () => {
+    mock.onGet('/userExtend').reply(200, {
+        id: 1234,
+        name: 'test_user_name',
+        email: 222,
+    });
+    await expect(api.userExtendGet()).rejects.toBeDefined();
 });

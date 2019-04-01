@@ -2,13 +2,14 @@
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "linterOptions": {
     "exclude": [
-      "config/**/*.js",
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js",
       "*.json",
       "build/**/*.js",
       "docs/**/*.js",
-      "**/*.json"
+      "**/*.json",
+      "out/**/*.ts",
+      "out/**/*.js"
     ]
   },
   "plugins": ["prettier"],
@@ -19,6 +20,7 @@
     "object-literal-shorthand": [false],
     "react/button-has-type": [false],
     "interface-over-type-literal": [false],
-    "object-literal-sort-keys": [false]
+    "object-literal-sort-keys": [false],
+    "no-unused-variable": false
   }
 }

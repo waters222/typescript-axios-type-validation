@@ -10,12 +10,12 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
     "verbose": true,
     "roots": [
-      "./"
+      "./__test__"
     ],
     "moduleFileExtensions": [
       "ts",
@@ -25,15 +25,20 @@
       "json",
       "node"
     ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": false
+      }
+    },
     "testEnvironment": "node"
   },
   "devDependencies": {
+    "@types/axios-mock-adapter": "^1.10.0",
     "@types/express": "^4.16.1",
     "@types/got": "^9.4.1",
     "@types/jest": "^23.3.10",
-    "create-test-server": "^2.4.0",
+    "axios-mock-adapter": "^1.16.0",
     "eslint-plugin-prettier": "^3.0.1",
-    "got": "^9.6.0",
     "jest": "^24.5.0",
     "prettier": "^1.16.4",
     "ts-jest": "^24.0.1",
